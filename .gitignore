@@ -1,0 +1,4 @@
+db.yaml
+invoice.tex.erb
+*.aux
+*.log

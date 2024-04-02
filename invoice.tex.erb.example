@@ -1,0 +1,62 @@
+\documentclass{letter}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2cm,top=3cm]{geometry}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{tabularx}
+\usepackage{numprint}
+
+\newcolumntype{Z}{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}X}
+
+\begin{document}
+
+\begin{tabularx}{\linewidth}{>{\huge}X>{\huge}w{r}{100pt}}
+  \textbf{IT-Konsult Företag} & \textbf{Faktura} \\
+\end{tabularx}
+
+\begin{FlushRight}
+\begin{tabularx}{150pt}{ll}
+  Fakturanummer: & <%= id %> \\
+  Fakturadatum: & <%= date %> \\
+  \addlinespace
+  \addlinespace
+<% customer.address.each do |a| %>
+  \multicolumn{2}{l}{<%= a %>} \\
+<% end %>
+\end{tabularx}
+\end{FlushRight}
+
+\begin{tabular}{ll}
+  Leveransdatum: & <%= delivered_on %> \\
+  Betalningsvilkor: & 30 dagar \\
+  Förfallodatum: & <%= due_date %> \\
+  Dröjsmålsränta: & 8\% + referensränta
+\end{tabular}
+
+\begin{tabularx}{\linewidth}{w{l}{180pt}ZZZZ}
+  \toprule
+  Specifikation & Antal & Enhet & á-pris & Summa\\
+  \midrule
+<% content.each do |il| %>
+  <%= il.item %> & <%= il.quantity %> & <%= il.unit %> & \numprint{<%= il.unit_price %>} <%= currency %> & \numprint{<%= il.amount %>} <%= currency %> \\
+<% end %>
+  \addlinespace
+  \addlinespace
+  Summa & & & & \numprint{<%= total %>} <%= currency %> \\
+  Moms (25\%) & & & & \numprint{<%= vat_total %>} <%= currency %> \\
+  Att betala & & & & \numprint{<%= total_with_vat %>} <%= currency %> \\
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{*{4}{l}}
+  \toprule
+  \textbf{Adress:} & \textbf{E-post:} & \textbf{Organisationsnr:} & \textbf{Iban:} \\
+  IT-Konsult Företag & \underline{example@example.com} & 123456789012 & 12345678901234567890 \\
+  Address & & \textbf{VAT-nr:} & \textbf{BIC:} \\
+  Street & & 1234567890123 & BICBICBIC \\
+  123 45 Grönköping & & & \textbf{Adress:} \\
+  Sverige & & & Bank, 123 45 Grönköping \\
+  \addlinespace
+  & & & Godkänd för F-skatt eller nej
+\end{tabularx}
+\end{document}

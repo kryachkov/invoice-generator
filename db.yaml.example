@@ -1,0 +1,16 @@
+---
+customers:
+  - key: customer_1
+    address_lines:
+      - Company name
+      - Street address
+      - Zip code city
+      - Country
+invoices:
+  - customer_key: customer_1
+    invoice_date: 2024-01-01
+    delivered_on: 2023-12
+    content:
+      - item: Development
+        quantity: 10
+        unit_price: 20
