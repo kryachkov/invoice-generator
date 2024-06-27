@@ -116,7 +116,7 @@ class DB
   end
 end
 
-db = DB.new(source_path: './db.yaml')
+db = DB.new(source_path: ENV.fetch('DB_PATH', './db.yaml'))
 db.load!
 
 invoice_template = ERB.new(
@@ -125,8 +125,10 @@ invoice_template = ERB.new(
 )
 
 db.invoices.each do |i|
+  path = ENV.fetch('OUTPUT_PATH', './')
   filename = "#{i.date.to_s.gsub('-', '')}_#{i.customer.name.gsub(' ', '_')}.tex"
-  f = File.new(filename, 'w')
+  f = File.new(File.join(path, filename),'w')
+
   f.puts(invoice_template.result(i.get_binding))
   f.close
 end
