@@ -127,7 +127,7 @@ invoice_template = ERB.new(
 db.invoices.each do |i|
   path = ENV.fetch('OUTPUT_PATH', './')
   filename = "#{i.date.to_s.gsub('-', '')}_#{i.customer.name.gsub(' ', '_')}.tex"
-  f = File.new(File.join(path, filename),'w')
+  f = File.new(File.join(path, filename), 'w')
 
   f.puts(invoice_template.result(i.get_binding))
   f.close
