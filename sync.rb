@@ -5,24 +5,26 @@ require 'date'
 require 'yaml'
 
 class Customer
-  attr_reader :key, :name, :address
+  attr_reader :key, :name, :address, :vat
 
-  def initialize(key:, address: [])
+  def initialize(key:, vat: nil, address: [])
     @key = key
     @address = address
+    @vat = vat
     @name = address.first
   end
 end
 
 class Invoice
-  attr_reader :id, :date, :due_period_days, :delivered_on, :customer, :content, :currency
+  attr_reader :id, :date, :due_period_days, :delivered_on, :customer, :reverse_vat_charge, :content, :currency
 
-  def initialize(id:, date:, delivered_on:, customer:, currency:, content: [], due_period_days: 30) # rubocop:disable Metrics/ParameterLists
+  def initialize(id:, date:, delivered_on:, customer:, currency:, reverse_vat_charge:, content: [], due_period_days: 30) # rubocop:disable Metrics/ParameterLists
     @id = id
     @date = date
     @due_period_days = due_period_days
     @delivered_on = delivered_on
     @customer = customer
+    @reverse_vat_charge = reverse_vat_charge
     @content = content
     @currency = currency
   end
@@ -85,7 +87,7 @@ class DB
       permitted_classes: [Date]
     )
     data['customers'].each do |c|
-      customers << Customer.new(key: c['key'], address: c['address_lines'])
+      customers << Customer.new(key: c['key'], vat: c['vat'], address: c['address_lines'])
     end
 
     data['invoices'].each_with_index do |invoice, i|
@@ -101,6 +103,7 @@ class DB
         customer: find_customer_by_key(key: invoice['customer_key']),
         date: invoice['invoice_date'],
         delivered_on: invoice['delivered_on'],
+        reverse_vat_charge: invoice['reverse_vat_charge'],
         content: content,
         currency: 'kr'
       )

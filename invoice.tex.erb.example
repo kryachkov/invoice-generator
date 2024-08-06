@@ -44,8 +44,12 @@
   \addlinespace
   \addlinespace
   Summa & & & & \numprint{<%= total %>} <%= currency %> \\
+<% if reverse_vat_charge %>
+  Reverse charge applies <%= customer.vat %> & & & & \\
+<% else %>
   Moms (25\%) & & & & \numprint{<%= vat_total %>} <%= currency %> \\
   Att betala & & & & \numprint{<%= total_with_vat %>} <%= currency %> \\
+<% end %>
 \end{tabularx}
 
 \begin{tabularx}{\linewidth}{*{4}{l}}
